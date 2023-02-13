@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: fedora-test-with-capabilities
+  name: fedora-test-with-capabilities
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      deployment: fedora-test-with-capabilities
+  template:
+    metadata:
+      labels:
+        deployment: fedora-test-with-capabilities
+      annotations:
+        webhook/capabilities: '["SETFCAP","CAP_NET_RAW","CAP_NET_ADMIN"]'
+    spec:
+      containers:
+      - image: quay.io/akaris/fedora-test:uid
+        imagePullPolicy: IfNotPresent
+        name: fedora-test-with-capabilities

@@ -20,9 +20,12 @@ deploy-webhook:
 	oc apply -f resources/service.yaml
 	oc apply -f resources/webhook.yaml
 
-deploy: openshift-install-cert-manager create-cert-manager-cert deploy-webhook
+deploy: install-openshift-cert-manager create-cert-manager-cert deploy-webhook
 
 undeploy:
 	oc delete -f resources/webhook.yaml
 	oc delete -f resources/service.yaml
 	oc delete -f resources/webhook-cert.yaml
+
+logs:
+	oc logs -n webhook -l deployment=webhook -f

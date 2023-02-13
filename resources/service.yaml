@@ -40,7 +40,7 @@ spec:
     spec:
       containers:
       - image: quay.io/akaris/webhook:latest
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         name: webhook
         ports:
         - containerPort: 8080

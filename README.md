@@ -28,3 +28,10 @@ Remove the webhook:
 ~~~
 make undeploy
 ~~~
+
+You can see the webhook pod's logs with:
+~~~
+oc logs -n webhook -l deployment=webhook -f
+~~~
+
+File resources/example-deployment.yaml contains an example pod deployment with the `webhook/capabilities` annotation.
