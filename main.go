@@ -49,7 +49,6 @@ func main() {
 	if err := builder.WebhookManagedBy(mgr).
 		For(&corev1.Pod{}).
 		WithDefaulter(&podAnnotator{}).
-		// WithValidator(&podValidator{}).
 		Complete(); err != nil {
 		entryLog.Error(err, "unable to create webhook", "webhook", "Pod")
 		os.Exit(1)
