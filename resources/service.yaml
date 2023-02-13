@@ -1,0 +1,61 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: webhook
+  name: webhook
+  namespace: webhook
+spec:
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - name: 443-to-9443-tcp
+    port: 443
+    protocol: TCP
+    targetPort: 9443
+  selector:
+    deployment: webhook
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: webhook
+  name: webhook
+  namespace: webhook
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  selector:
+    matchLabels:
+      deployment: webhook
+  template:
+    metadata:
+      labels:
+        deployment: webhook
+    spec:
+      containers:
+      - image: quay.io/akaris/webhook:latest
+        imagePullPolicy: IfNotPresent
+        name: webhook
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        resources: {}
+        volumeMounts:
+        - mountPath: /tmp/k8s-webhook-server/serving-certs
+          name: serving-certs
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: serving-certs
+        secret:
+          defaultMode: 420
+          secretName: webhook-certificates
